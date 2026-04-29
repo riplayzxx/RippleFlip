@@ -3,22 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RippleFlipple</title>
-    </head>
-    <body>
-    <h1>RippleFlipple</h1>
+    <title>RippleFlip</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: sans-serif;
+            max-width: 480px;
+            margin: 60px auto;
+            padding: 0 1rem;
+            background-color: #0d1b2a;
+            color: #e0e8f0;
+        }
 
-    <h2 id="balance">Balance</h2>
+        h1 { margin-bottom: 0.25rem; }
+        #balance { margin: 0.25rem 0 0.5rem; }
+        #result  { margin: 0 0 1.5rem; }
 
-    <div id="rollbuttons">
-        <button id="buttonallin">ALL IN</button>
-        <button id="button5k">Roll 5k</button>
-        <button id="button10k">Roll 10k</button>
-        <button id="button25k">Roll 25k</button>
-        <button id="button100k">Roll 100k</button>
-        <button id="button1m">Roll 1M</button>
+        /* ── Buttons ── */
+        .buttons { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        button {
+            padding: 10px 18px;
+            font-size: 15px;
+            cursor: pointer;
+            border: 1px solid #2a4a6a;
+            border-radius: 6px;
+            background: #1a3a5c;
+            color: #e0e8f0;
+        }
+        button:hover:not(:disabled)  { background: #1e4a72; }
+        button:active:not(:disabled) { background: #245580; }
+        button:disabled { opacity: 0.4; cursor: not-allowed; }
+        #buttonallin { font-weight: bold; border-color: rgb(69,58,124); color: rgb(200,140,140); }
+        #autoroll { accent-color: #4caf82; width: 16px; height: 16px; cursor: pointer; }
+
+        /* ── Inputs ── */
+        .text-input {
+            padding: 10px 12px;
+            font-size: 15px;
+            border-radius: 6px;
+            border: 1px solid #2a4a6a;
+            background: #1a3a5c;
+            color: #e0e8f0;
+            width: 100%;
+        }
+        .text-input::placeholder { color: #5a7a9a; }
+
+        /* ── Auth screens ── */
+        #authWrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        #authWrapper h2 { margin: 0 0 4px; }
+        .auth-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 6px;
+            border: 1px solid #2a4a6a;
+            background: #112233;
+            color: #7a9ab0;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            background: #1a3a5c;
+            color: #e0e8f0;
+            border-color: #4caf82;
+        }
+        .auth-error {
+            color: #e05c5c;
+            font-size: 13px;
+            min-height: 18px;
+        }
+        .auth-info {
+            color: #4caf82;
+            font-size: 13px;
+            min-height: 18px;
+        }
+        .code-hint {
+            background: #0a2236;
+            border: 1px solid #2a4a6a;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #8ab0c8;
+            margin-top: 2px;
+        }
+        .code-hint code {
+            color: #4caf82;
+            background: #0d1b2a;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* ── Nav bar ── */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .navbar h1 { margin: 0; }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #8ab0c8;
+        }
+        #logoutBtn {
+            padding: 6px 14px;
+            font-size: 13px;
+            border-radius: 6px;
+            border: 1px solid #2a4a6a;
+            background: #112233;
+            color: #e05c5c;
+            cursor: pointer;
+        }
+        #logoutBtn:hover { background: #1a2233; }
+
+        /* page visibility */
+        .page { display: none; }
+        .page.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <!-- ══ AUTH PAGE ══ -->
+    <div id="pageAuth" class="page active">
+        <h1>RippleFlip</h1>
+        <div id="authWrapper">
+            <div class="auth-tabs">
+                <button class="tab-btn active" id="tabLogin"  onclick="showTab('login')">Login</button>
+                <button class="tab-btn"        id="tabSignup" onclick="showTab('signup')">Sign Up</button>
+            </div>
+
+            <!-- Login -->
+            <div id="formLogin">
+                <input class="text-input" id="loginUsername" placeholder="Minecraft username" autocomplete="off">
+                <div style="height:8px"></div>
+                <button id="btnRequestCode" onclick="requestCode()" style="width:100%">Send Code</button>
+
+                <div id="loginCodeSection" style="display:none; margin-top:10px;">
+                    <div class="code-hint">
+                        Type <code>/msg evn3 &lt;code&gt;</code> in-game — or paste the dev code shown in your terminal below.
+                    </div>
+                    <div style="height:8px"></div>
+                    <input class="text-input" id="loginCode" placeholder="6-digit code" maxlength="6" autocomplete="off">
+                    <div style="height:8px"></div>
+                    <button onclick="verifyCode()" style="width:100%">Verify &amp; Login</button>
+                </div>
+
+                <div class="auth-error" id="loginError"></div>
+                <div class="auth-info"  id="loginInfo"></div>
+            </div>
+
+            <!-- Signup -->
+            <div id="formSignup" style="display:none">
+                <input class="text-input" id="signupUsername" placeholder="Minecraft username" autocomplete="off">
+                <div style="height:8px"></div>
+                <button onclick="signup()" style="width:100%">Create Account</button>
+                <div class="auth-error" id="signupError"></div>
+                <div class="auth-info"  id="signupInfo"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ GAME PAGE ══ -->
+    <div id="pageGame" class="page">
+        <div class="navbar">
+            <h1>RippleFlip</h1>
+            <div class="nav-right">
+                <span id="navUsername"></span>
+                <button id="logoutBtn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <h2 id="balance">Balance: —</h2>
+        <p  id="result">Roll result: —</p>
+
+        <div class="buttons">
+            <button id="buttonallin">ALL IN</button>
+            <button id="button1k">1k</button>
+            <button id="button5k">5k</button>
+            <button id="button10k">10k</button>
+            <button id="button25k">25k</button>
+            <button id="button100k">100k</button>
+            <button id="button300k">300k</button>
+            <button id="button700k">700k</button>
+            <button id="button1m">1M</button>
+            <label style="display:flex;align-items:center;gap:6px;color:#e0e8f0;font-size:15px;cursor:pointer;">
+                <input type="checkbox" id="autoroll"> Auto
+            </label>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:16px;align-items:center;">
+            <input type="number" id="customAmount" placeholder="Custom bet..." min="1"
+                   class="text-input" style="width:160px;">
+            <button id="buttonCustom">Bet</button>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:10px;align-items:center;">
+            <input type="number" id="depositAmount" placeholder="Amount..." min="1"
+                   class="text-input" style="width:160px;">
+            <button id="buttonDeposit">Deposit</button>
+        </div>
     </div>
 
     <script src="front.js" defer></script>
-    </body>
+</body>
 </html>
