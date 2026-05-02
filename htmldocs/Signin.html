@@ -2,45 +2,29 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Flippp page</title>
+        <title>Sign In</title>
         <style>
-            .tit {
-                color: #51A868;
-                text-size-adjust: 150%;
-                padding-top: 1%;
-                border: #100f16;
-                font-size: 400%;
-            }
-            html {
-                background-color: #36354d;
-                font-family: Tahoma, sans-serif;
-                text-align: center;
-            }
-            .contienecosas  {
-                display: flex;
-                height: 100vh;
-            }
-            .LMenu{
-                width: 20%;
-                background-color: #100f16;
-            }
-            .RMenu {
-                width: 80%;
-            }
+
         </style>
     </head>
 
     <body>
-        <div class="contienecosas">
-            <div class="LMenu">
-                potones
-            </div>
-            <div class="RMenu">
-                <h1 class="tit"> Ripple flipple</h1>
-                <button>
-                    
-                </button>
-            </div>
+        <div class="Signin">
+            <label for="uname">
+                <b>Username</b>
+            </label>
+
+            <input type="text" placeholder="Enter Username" name="uname" required>
+
+            <label for="psw">
+                <b>Password</b>
+            </label>
+            
+            <input type="password" placeholder="Enter Password" name="psw" required>
+
+            <button type="submit">
+                Login
+            </button>
         </div>
     </body>
 </html>
