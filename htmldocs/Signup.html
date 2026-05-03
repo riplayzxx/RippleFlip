@@ -4,32 +4,92 @@
         <meta charset="UTF-8">
         <title>Sign Up</title>
         <style>
-
+            html {
+                background-color: #0d1b2a;
+                font-family: Tahoma, sans-serif;
+               }
+            label {
+                background-color: #1a3a5c;
+                font-size: larger;
+                color: #e0e8f0;
+                border-color: #51A868;
+                border-radius: 5px;
+                border-width: 1px;
+                border-style: solid;
+                padding: 2px;
+                margin-right: 1vh;
+            }
+            .Signup {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 30vh;
+            }
+            .topin {
+                width: 20vh;
+                height: 4vh;
+            }
+            h1 {
+                color: #e0e8f0;
+            }
+            .signin {
+                background-color: #1a3a5c;
+                font-size: larger;
+                color: #e0e8f0;
+                border-color: #51A868;
+                border-radius: 10px;
+                border-width: 2.5px;
+                border-style: solid;
+            }
+            .signintx {
+                font-size: larger;
+                color: #e0e8f0;
+            }
+            .backbox {
+                position: absolute;
+                left: 20vh;
+                top: 1vh;
+            }
         </style>
     </head>
 
     <body>
-        <div class="Signin">
-            <label for="uname">
-                <b>Minecraft Name</b>
-            </label>
-            <input type="text" placeholder="Enter your MC name" name="uname" required>
-            <br>
+        <div class="backbox">
+            <h3 class="signintx">
+                already have an account?
+            </h3>
+            <a href="Signin.html">
+                <button class="signin">
+                    Sign In
+                </button>
+            </a>
+        </div>
+        <div class="Signup">
+            <div>
+                <h1>Create you account</h1>
+                <label for="uname">
+                    <b>Minecraft Name</b>     
+                </label>
+                <input class="topin" type="text" placeholder="Enter your MC name" name="uname" required>
 
-            <label for="psw">
-                <b>Password</b>
-            </label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
-            <br>
-
-            <label for="email">
-                <b>Email</b>
-            </label>
-            <input type="email" placeholder="email" name="email">
-            <br>
-            <button type="button" onclick="">
-                Create account
-            </button>
+                <label for="psw">
+                    <b>Password</b>      
+                </label>
+                <input class="topin" type="password" placeholder="Enter Password" name="psw" required>
+                <br>
+                <br>
+                <div class="lowin">    
+                    <label for="email">
+                        <b>Email</b>     
+                    </label>
+                    <input type="email" placeholder="email" name="email">
+                    <br>
+                    <br>
+                    <button type="button" onclick="SignIn();">
+                        Create account
+                    </button>
+                </div>
+            </div>
         </div>
     </body>
 </html>
